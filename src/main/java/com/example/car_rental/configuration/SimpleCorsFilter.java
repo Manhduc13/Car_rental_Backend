@@ -8,37 +8,32 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class SimpleCorsFilter implements Filter {
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
-        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-        Map<String,String> map = new HashMap<>();
-        String originHeader = httpServletRequest.getHeader("origin");
-        httpServletResponse.setHeader("Access-Control-Allow-Origin", originHeader);
-        httpServletResponse.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
-        httpServletResponse.setHeader("Access-Control-Max-Age","3600");
-        httpServletResponse.setHeader("Access-Control_Allow_Headers", "*");
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain) throws IOException, ServletException {
+        HttpServletResponse response = (HttpServletResponse) res;
+        HttpServletRequest request = (HttpServletRequest) req;
 
-        if("OPTIONS".equalsIgnoreCase(httpServletRequest.getMethod())){
-            httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-        } else{
-            filterChain.doFilter(httpServletRequest,httpServletResponse);
+        response.setHeader("Access-Control-Allow-Origin", "*"); // Hoặc thay thế bằng origin cụ thể
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
+        response.setHeader("Access-Control-Max-Age", "3600");
+        response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            filterChain.doFilter(req, res);
         }
     }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        Filter.super.init(filterConfig);
     }
 
     @Override
     public void destroy() {
-        Filter.super.destroy();
     }
 }
