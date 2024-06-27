@@ -6,6 +6,7 @@ import com.example.car_rental.entity.User;
 import com.example.car_rental.enums.UserRoles;
 import com.example.car_rental.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,7 +24,7 @@ public class AuthServiceImpl implements AuthService{
     public UserResponse createUser(SignupRequest request) {
         User user = new User();
         user.setUsername(request.getUsername());
-        user.setPassword(request.getPassword());
+        user.setPassword(new BCryptPasswordEncoder().encode(request.getPassword()));
         user.setEmail(request.getEmail());
         user.setUserRoles(UserRoles.CUSTOMER);
 
