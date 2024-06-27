@@ -5,6 +5,7 @@ import com.example.car_rental.dto.response.UserResponse;
 import com.example.car_rental.entity.User;
 import com.example.car_rental.enums.UserRoles;
 import com.example.car_rental.repository.UserRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,20 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService{
 
     private final UserRepository userRepository;
+
+    @PostConstruct
+    public void createAdminAccount(){
+        User admin = userRepository.findByUserRoles(UserRoles.ADMIN);
+        if(admin == null){
+            User newAdmin = new User();
+            newAdmin.setUsername("admin");
+            newAdmin.setEmail("admin@gmail.com");
+            newAdmin.setPassword(new BCryptPasswordEncoder().encode("admin"));
+            newAdmin.setUserRoles(UserRoles.ADMIN);
+            userRepository.save(newAdmin);
+            System.out.println("Admin account has been created.");
+        }
+    }
 
     @Override
     public boolean emailExisted(String email) {
