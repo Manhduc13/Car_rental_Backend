@@ -20,6 +20,6 @@ public class CarResponse {
     private String description;
     private Long price;
     private Date year;
-    private byte[] img;
-    private MultipartFile returnedImage;
+    private MultipartFile image;
+    private byte[] returnedImage;
 }

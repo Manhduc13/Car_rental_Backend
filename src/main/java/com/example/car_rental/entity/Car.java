@@ -1,5 +1,6 @@
 package com.example.car_rental.entity;
 
+import com.example.car_rental.dto.response.CarResponse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,5 +27,22 @@ public class Car {
     private Long price;
     private Date year;
     @Column(columnDefinition = "longblob")
-    private byte[] img;
+    private byte[] image;
+
+    public CarResponse getCarResponse(){
+        CarResponse carResponse = new CarResponse();
+
+        carResponse.setId(id);
+        carResponse.setName(name);
+        carResponse.setColor(color);
+        carResponse.setPrice(price);
+        carResponse.setBrand(brand);
+        carResponse.setType(type);
+        carResponse.setYear(year);
+        carResponse.setDescription(description);
+        carResponse.setTransmission(transmission);
+        carResponse.setReturnedImage(image);
+
+        return carResponse;
+    }
 }

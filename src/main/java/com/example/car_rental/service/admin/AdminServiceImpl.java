@@ -8,11 +8,23 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class AdminServiceImpl implements  AdminService{
     private final CarRepository carRepository;
+
+    @Override
+    public List<CarResponse> getAllCars() {
+        return carRepository.findAll().stream().map(Car::getCarResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public void  deleteCar(Long id) {
+        carRepository.deleteById(id);
+    }
 
     @Override
     public boolean postCar(PostCarRequest request) throws IOException {
@@ -27,7 +39,7 @@ public class AdminServiceImpl implements  AdminService{
             car.setYear(request.getYear());
             car.setType(request.getType());
             car.setTransmission(request.getTransmission());
-            car.setImg(request.getImage().getBytes());
+            car.setImage(request.getImage().getBytes());
 
             carRepository.save(car);
 
