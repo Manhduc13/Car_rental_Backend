@@ -4,17 +4,21 @@ import com.example.car_rental.dto.request.PostCarRequest;
 import com.example.car_rental.dto.response.CarResponse;
 import com.example.car_rental.entity.Car;
 import com.example.car_rental.repository.CarRepository;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AdminServiceImpl implements  AdminService{
-    private final CarRepository carRepository;
+    CarRepository carRepository;
 
     @Override
     public List<CarResponse> getAllCars() {
@@ -22,8 +26,38 @@ public class AdminServiceImpl implements  AdminService{
     }
 
     @Override
+    public boolean updateCar(Long id, CarResponse carResponse) throws IOException {
+        Optional<Car> car = carRepository.findById(id);
+        if(car.isPresent()){
+            Car existingCar = car.get();
+            if(carResponse.getImage() != null){
+                existingCar.setImage(carResponse.getImage().getBytes());
+            }
+            existingCar.setName(carResponse.getName());
+            existingCar.setBrand(carResponse.getBrand());
+            existingCar.setType(carResponse.getType());
+            existingCar.setYear(carResponse.getYear());
+            existingCar.setPrice(carResponse.getPrice());
+            existingCar.setColor(carResponse.getColor());
+            existingCar.setTransmission(carResponse.getTransmission());
+            existingCar.setDescription(carResponse.getDescription());
+
+            carRepository.save(existingCar);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
     public void  deleteCar(Long id) {
         carRepository.deleteById(id);
+    }
+
+    @Override
+    public CarResponse getCarbyId(Long id) {
+        Optional<Car> car = carRepository.findById(id);
+        return car.map(Car::getCarResponse).orElse(null);
     }
 
     @Override

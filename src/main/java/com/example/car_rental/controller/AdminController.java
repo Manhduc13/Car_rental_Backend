@@ -1,6 +1,7 @@
 package com.example.car_rental.controller;
 
 import com.example.car_rental.dto.request.PostCarRequest;
+import com.example.car_rental.dto.response.CarResponse;
 import com.example.car_rental.service.admin.AdminService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -36,9 +37,29 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getAllCars());
     }
 
+    @GetMapping("/cars/{id}")
+    public ResponseEntity<CarResponse> getCarById(@PathVariable Long id){
+        CarResponse carResponse = adminService.getCarbyId(id);
+        return ResponseEntity.ok(carResponse);
+    }
+
     @DeleteMapping("/cars/{id}")
     public ResponseEntity<Void> deleteCar(@PathVariable Long id){
         adminService.deleteCar(id);
         return ResponseEntity.ok(null);
+    }
+
+    @PutMapping("/cars/{id}")
+    public ResponseEntity<Void> updateCar(@PathVariable Long id, @ModelAttribute CarResponse carResponse) throws IOException {
+        try{
+            boolean success = adminService.updateCar(id, carResponse);
+            if(success){
+                return ResponseEntity.status(HttpStatus.OK).build();
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 }
