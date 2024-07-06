@@ -1,6 +1,7 @@
 package com.example.car_rental.service.customer;
 
 import com.example.car_rental.dto.request.BookCarRequest;
+import com.example.car_rental.dto.request.BookCarResponse;
 import com.example.car_rental.dto.response.CarResponse;
 import com.example.car_rental.entity.BookCar;
 import com.example.car_rental.entity.Car;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Book;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -33,7 +35,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CarResponse getCarbyId(Long id) {
+    public List<BookCarResponse> getBookingsByUserId(Long userId) {
+        return bookCarRepository.findAllByUserId(userId).stream().map(BookCar::getBookCarResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public CarResponse getCarById(Long id) {
         Optional<Car> car = carRepository.findById(id);
         return car.map(Car::getCarResponse).orElse(null);
     }
@@ -47,6 +54,8 @@ public class CustomerServiceImpl implements CustomerService {
             bookCar.setUser(user.get());
             bookCar.setCar(car.get());
             bookCar.setStatus(BookCarStatus.PENDING);
+            bookCar.setEndDate((request.getEndDate()));
+            bookCar.setStartDate(request.getStartDate());
             long diffInMilliSeconds = bookCar.getEndDate().getTime() - bookCar.getStartDate().getTime();
             long days = TimeUnit.MILLISECONDS.toDays(diffInMilliSeconds);
             bookCar.setDays(days);
