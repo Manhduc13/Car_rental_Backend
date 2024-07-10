@@ -1,4 +1,4 @@
-package com.example.car_rental.dto.request;
+package com.example.car_rental.dto.response;
 
 import com.example.car_rental.enums.BookCarStatus;
 import lombok.AllArgsConstructor;

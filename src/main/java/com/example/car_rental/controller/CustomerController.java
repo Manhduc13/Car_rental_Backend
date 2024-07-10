@@ -1,7 +1,9 @@
 package com.example.car_rental.controller;
 
+import com.example.car_rental.dto.CarDtoListDto;
 import com.example.car_rental.dto.request.BookCarRequest;
-import com.example.car_rental.dto.request.BookCarResponse;
+import com.example.car_rental.dto.request.SearchCarRequest;
+import com.example.car_rental.dto.response.BookCarResponse;
 import com.example.car_rental.dto.response.CarResponse;
 import com.example.car_rental.service.customer.CustomerService;
 import lombok.AccessLevel;
@@ -51,5 +53,11 @@ public class CustomerController {
     @GetMapping("/cars/bookings/{userId}")
     public ResponseEntity<List<BookCarResponse>> getBookingsByUserId(@PathVariable Long userId){
         return ResponseEntity.ok(customerService.getBookingsByUserId(userId));
+    }
+
+    @PostMapping("/cars/search")
+    public ResponseEntity<CarDtoListDto> searchCar(@RequestBody SearchCarRequest request){
+        CarDtoListDto carDtoListDto = customerService.searchCar(request);
+        return ResponseEntity.ok(carDtoListDto);
     }
 }

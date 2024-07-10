@@ -1,6 +1,6 @@
 package com.example.car_rental.entity;
 
-import com.example.car_rental.dto.request.BookCarResponse;
+import com.example.car_rental.dto.response.BookCarResponse;
 import com.example.car_rental.enums.BookCarStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

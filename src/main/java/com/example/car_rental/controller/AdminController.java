@@ -1,6 +1,9 @@
 package com.example.car_rental.controller;
 
+import com.example.car_rental.dto.CarDtoListDto;
 import com.example.car_rental.dto.request.PostCarRequest;
+import com.example.car_rental.dto.request.SearchCarRequest;
+import com.example.car_rental.dto.response.BookCarResponse;
 import com.example.car_rental.dto.response.CarResponse;
 import com.example.car_rental.service.admin.AdminService;
 import lombok.AccessLevel;
@@ -12,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -21,7 +25,7 @@ import java.io.IOException;
 public class AdminController {
     AdminService adminService;
 
-    @PostMapping("/car")
+    @PostMapping("/cars/post")
     public ResponseEntity<?> postCar(@ModelAttribute PostCarRequest request) throws IOException {
         log.info("Received request: {}", request);
         boolean success = adminService.postCar(request);
@@ -39,7 +43,7 @@ public class AdminController {
 
     @GetMapping("/cars/{id}")
     public ResponseEntity<CarResponse> getCarById(@PathVariable Long id){
-        CarResponse carResponse = adminService.getCarbyId(id);
+        CarResponse carResponse = adminService.getCarById(id);
         return ResponseEntity.ok(carResponse);
     }
 
@@ -61,5 +65,27 @@ public class AdminController {
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+    }
+
+    @GetMapping("/cars/bookings")
+    public ResponseEntity<List<BookCarResponse>> getBookings(){
+        List<BookCarResponse> bookingCars = adminService.getBookings();
+        return ResponseEntity.ok(bookingCars);
+    }
+
+    @GetMapping("/cars/bookings/{id}/{status}")
+    public ResponseEntity<?> changeBookingStatus(@PathVariable Long id, @PathVariable String status){
+        boolean success = adminService.changeBookingStatus(id,status);
+        if(success) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/cars/search")
+    public ResponseEntity<CarDtoListDto> searchCar(@RequestBody SearchCarRequest request){
+        CarDtoListDto carDtoListDto = adminService.searchCar(request);
+        return ResponseEntity.ok(carDtoListDto);
     }
 }

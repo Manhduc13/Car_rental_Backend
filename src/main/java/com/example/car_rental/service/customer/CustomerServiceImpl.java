@@ -1,7 +1,9 @@
 package com.example.car_rental.service.customer;
 
+import com.example.car_rental.dto.CarDtoListDto;
 import com.example.car_rental.dto.request.BookCarRequest;
-import com.example.car_rental.dto.request.BookCarResponse;
+import com.example.car_rental.dto.request.SearchCarRequest;
+import com.example.car_rental.dto.response.BookCarResponse;
 import com.example.car_rental.dto.response.CarResponse;
 import com.example.car_rental.entity.BookCar;
 import com.example.car_rental.entity.Car;
@@ -13,6 +15,8 @@ import com.example.car_rental.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.awt.print.Book;
@@ -28,6 +32,29 @@ public class CustomerServiceImpl implements CustomerService {
     CarRepository carRepository;
     UserRepository userRepository;
     BookCarRepository bookCarRepository;
+
+    @Override
+    public CarDtoListDto searchCar(SearchCarRequest request) {
+        Car car = new Car();
+
+        car.setBrand(request.getBrand());
+        car.setType(request.getType());
+        car.setTransmission(request.getTransmission());
+        car.setColor(request.getColor());
+
+        ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll()
+                .withMatcher("brand", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("type", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("transmission", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("color", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+
+        Example<Car> carExample = Example.of(car, exampleMatcher);
+        List<Car> carList = carRepository.findAll(carExample);
+        CarDtoListDto carDtoListDto = new CarDtoListDto();
+        carDtoListDto.setCarResponseList(carList.stream().map(Car::getCarResponse).collect(Collectors.toList()));
+
+        return carDtoListDto;
+    }
 
     @Override
     public List<CarResponse> getAllCars() {

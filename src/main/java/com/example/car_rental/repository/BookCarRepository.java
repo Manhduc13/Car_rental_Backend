@@ -1,6 +1,5 @@
 package com.example.car_rental.repository;
 
-import com.example.car_rental.dto.request.BookCarResponse;
 import com.example.car_rental.entity.BookCar;
 import org.springframework.data.jpa.repository.JpaRepository;
 
