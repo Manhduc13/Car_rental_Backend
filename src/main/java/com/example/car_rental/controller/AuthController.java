@@ -1,7 +1,7 @@
 package com.example.car_rental.controller;
 
-import com.example.car_rental.dto.request.AuthenticationRequest;
-import com.example.car_rental.dto.request.SignupRequest;
+import com.example.car_rental.dto.request.SignInRequest;
+import com.example.car_rental.dto.request.SignUpRequest;
 import com.example.car_rental.dto.response.AuthenticationResponse;
 import com.example.car_rental.dto.response.UserResponse;
 import com.example.car_rental.entity.User;
@@ -40,7 +40,7 @@ public class AuthController {
     UserRepository userRepository;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> createUser(@RequestBody SignupRequest request){
+    public ResponseEntity<?> createUser(@RequestBody SignUpRequest request){
 
         if(authService.emailExisted(request.getEmail()))
             return new ResponseEntity<>("Customer with this email is already existed", HttpStatus.NOT_ACCEPTABLE);
@@ -51,13 +51,13 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public AuthenticationResponse createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws BadCredentialsException, DisabledException, UsernameNotFoundException {
+    public AuthenticationResponse createAuthenticationToken(@RequestBody SignInRequest request) throws BadCredentialsException, DisabledException, UsernameNotFoundException {
 
         // Check user email and password
         //**************************************************************************************************************
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(),
-                                                                                       authenticationRequest.getPassword()));
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),
+                    request.getPassword()));
         } catch (BadCredentialsException e){
             throw new BadCredentialsException("Incorrect username or password");
         }
@@ -65,7 +65,7 @@ public class AuthController {
 
         // Get user info and generate token
         //**************************************************************************************************************
-        final UserDetails userDetails = userService.userDetailsService().loadUserByUsername(authenticationRequest.getEmail());
+        final UserDetails userDetails = userService.userDetailsService().loadUserByUsername(request.getEmail());
         Optional<User> optionalUser = userRepository.findByEmail(userDetails.getUsername());
         final String jwt = jwtUtil.generateToken(userDetails);
         //**************************************************************************************************************

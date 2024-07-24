@@ -42,7 +42,7 @@ public class JWTUtil {
         return Jwts.builder().setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000*60*60)) // token will expire after 60 minutes
+                .setExpiration(new Date(System.currentTimeMillis() + 1000*60*60)) // token will expire after 1 hour
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
     }
 
@@ -50,7 +50,7 @@ public class JWTUtil {
         return Jwts.builder().setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 604800000))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000*60*60 * 24 * 7)) // new token will expire after 7 days
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
     }
 

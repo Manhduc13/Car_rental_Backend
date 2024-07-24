@@ -1,6 +1,5 @@
 package com.example.car_rental.service.admin;
 
-import com.example.car_rental.dto.CarDtoListDto;
 import com.example.car_rental.dto.request.PostCarRequest;
 import com.example.car_rental.dto.request.SearchCarRequest;
 import com.example.car_rental.dto.response.BookCarResponse;
@@ -17,5 +16,5 @@ public interface AdminService {
     boolean updateCar(Long id, CarResponse carResponse) throws IOException;
     List<BookCarResponse> getBookings();
     boolean changeBookingStatus(Long bookingId, String status);
-    CarDtoListDto searchCar(SearchCarRequest request);
+    List<CarResponse> searchCar(SearchCarRequest request);
 }

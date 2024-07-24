@@ -1,6 +1,6 @@
 package com.example.car_rental.service.auth;
 
-import com.example.car_rental.dto.request.SignupRequest;
+import com.example.car_rental.dto.request.SignUpRequest;
 import com.example.car_rental.dto.response.UserResponse;
 import com.example.car_rental.entity.User;
 import com.example.car_rental.enums.UserRoles;
@@ -36,7 +36,7 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public UserResponse createUser(SignupRequest request) {
+    public UserResponse createUser(SignUpRequest request) {
         User user = new User();
         user.setUsername(request.getUsername());
         user.setPassword(new BCryptPasswordEncoder().encode(request.getPassword()));

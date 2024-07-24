@@ -1,6 +1,5 @@
 package com.example.car_rental.service.admin;
 
-import com.example.car_rental.dto.CarDtoListDto;
 import com.example.car_rental.dto.request.PostCarRequest;
 import com.example.car_rental.dto.request.SearchCarRequest;
 import com.example.car_rental.dto.response.BookCarResponse;
@@ -52,7 +51,7 @@ public class AdminServiceImpl implements  AdminService{
     }
 
     @Override
-    public CarDtoListDto searchCar(SearchCarRequest request) {
+    public List<CarResponse> searchCar(SearchCarRequest request) {
         Car car = new Car();
 
         car.setBrand(request.getBrand());
@@ -68,9 +67,8 @@ public class AdminServiceImpl implements  AdminService{
 
         Example<Car> carExample = Example.of(car, exampleMatcher);
         List<Car> carList = carRepository.findAll(carExample);
-        CarDtoListDto carDtoListDto = new CarDtoListDto();
-        carDtoListDto.setCarResponseList(carList.stream().map(Car::getCarResponse).collect(Collectors.toList()));
-        return carDtoListDto;
+
+        return carList.stream().map(Car::getCarResponse).collect(Collectors.toList());
     }
 
     @Override

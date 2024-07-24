@@ -1,6 +1,5 @@
 package com.example.car_rental.service.customer;
 
-import com.example.car_rental.dto.CarDtoListDto;
 import com.example.car_rental.dto.request.BookCarRequest;
 import com.example.car_rental.dto.request.SearchCarRequest;
 import com.example.car_rental.dto.response.BookCarResponse;
@@ -19,7 +18,6 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Book;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -34,7 +32,7 @@ public class CustomerServiceImpl implements CustomerService {
     BookCarRepository bookCarRepository;
 
     @Override
-    public CarDtoListDto searchCar(SearchCarRequest request) {
+    public List<CarResponse> searchCar(SearchCarRequest request) {
         Car car = new Car();
 
         car.setBrand(request.getBrand());
@@ -50,10 +48,8 @@ public class CustomerServiceImpl implements CustomerService {
 
         Example<Car> carExample = Example.of(car, exampleMatcher);
         List<Car> carList = carRepository.findAll(carExample);
-        CarDtoListDto carDtoListDto = new CarDtoListDto();
-        carDtoListDto.setCarResponseList(carList.stream().map(Car::getCarResponse).collect(Collectors.toList()));
 
-        return carDtoListDto;
+        return carList.stream().map(Car::getCarResponse).collect(Collectors.toList());
     }
 
     @Override

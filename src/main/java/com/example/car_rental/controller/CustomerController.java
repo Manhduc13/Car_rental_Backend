@@ -1,6 +1,5 @@
 package com.example.car_rental.controller;
 
-import com.example.car_rental.dto.CarDtoListDto;
 import com.example.car_rental.dto.request.BookCarRequest;
 import com.example.car_rental.dto.request.SearchCarRequest;
 import com.example.car_rental.dto.response.BookCarResponse;
@@ -56,8 +55,8 @@ public class CustomerController {
     }
 
     @PostMapping("/cars/search")
-    public ResponseEntity<CarDtoListDto> searchCar(@RequestBody SearchCarRequest request){
-        CarDtoListDto carDtoListDto = customerService.searchCar(request);
-        return ResponseEntity.ok(carDtoListDto);
+    public ResponseEntity<List<CarResponse>> searchCar(@RequestBody SearchCarRequest request){
+
+        return ResponseEntity.ok(customerService.searchCar(request));
     }
 }
