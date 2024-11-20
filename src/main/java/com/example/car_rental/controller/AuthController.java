@@ -41,7 +41,6 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> createUser(@RequestBody SignUpRequest request){
-
         if(authService.emailExisted(request.getEmail()))
             return new ResponseEntity<>("Customer with this email is already existed", HttpStatus.NOT_ACCEPTABLE);
 
@@ -52,7 +51,6 @@ public class AuthController {
 
     @PostMapping("/login")
     public AuthenticationResponse createAuthenticationToken(@RequestBody SignInRequest request) throws BadCredentialsException, DisabledException, UsernameNotFoundException {
-
         // Check user email and password
         //**************************************************************************************************************
         try {

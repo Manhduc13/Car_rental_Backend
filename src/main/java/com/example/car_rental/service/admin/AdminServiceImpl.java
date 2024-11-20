@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AdminServiceImpl implements  AdminService{
     CarRepository carRepository;
-    private final BookCarRepository bookCarRepository;
+    BookCarRepository bookCarRepository;
 
     @Override
     public boolean changeBookingStatus(Long bookingId, String status) {
